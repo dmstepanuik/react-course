@@ -5,6 +5,7 @@ import './styles/App.css';
 import PostList from './Components/PostList';
 
 import PostForm from './Components/PostForm';
+
 import MySelect from './Components/UI/select/MySelect';
 
 function App() {
@@ -13,7 +14,7 @@ function App() {
     { id: 2, title: 'Javascript 2', body: 'Description' },
     { id: 3, title: 'Javascript 3', body: 'Description' },
   ]);
-  const [selectedSort, setSelectedSort] = useState('');
+
   const createPost = newPost => {
     setPosts([...posts, newPost]);
   };
@@ -23,28 +24,17 @@ function App() {
     setPosts(posts.filter(p => p.id !== post.id));
   };
 
-  const sortPosts = sort => {
-    selectedSort(sort);
-    console.log(sort);
-  };
-
   return (
     <div className="App">
       <PostForm create={createPost} />
       <hr style={{ margin: '15px 0' }} />
       <div>
-        <MySelect
-          value={selectedSort}
-          onChange={sortPosts}
-          defaultValue="Sort"
-          options={[]}
-        />
+        <MySelect defaultValue="Sort" options={[]} />
       </div>
-
       {posts.length ? (
-        <PostList remove={removePost} posts={posts} title="Post of JS " />
+        <PostList remove={removePost} posts={posts} title="Posts about JS" />
       ) : (
-        <h1 style={{ textAlign: 'center' }}> Posts are not find</h1>
+        <h1 style={{ textAlign: 'center' }}>Posts are not find!</h1>
       )}
     </div>
   );
