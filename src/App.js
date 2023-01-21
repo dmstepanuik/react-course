@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import './styles/App.css';
 
@@ -6,7 +6,7 @@ import PostList from './Components/PostList';
 
 import PostForm from './Components/PostForm';
 
-import MySelect from './Components/UI/select/MySelect';
+import PostFilter from './Components/PostFilter';
 
 function App() {
   const [posts, setPosts] = useState([
@@ -14,6 +14,23 @@ function App() {
     { id: 2, title: 'Javascript 2', body: 'Description' },
     { id: 3, title: 'Javascript 3', body: 'Description' },
   ]);
+  const [filter, setFilter] = useState({ sort: '', query: '' });
+
+  const sortedPosts = useMemo(() => {
+    console.log('Logic worked out SortedPosts');
+    if (filter.sort) {
+      return [...posts].sort((a, b) =>
+        a[filter.sort].localeCompare(b[filter.sort])
+      );
+    }
+    return posts;
+  }, [filter.sort, posts]);
+
+  const sortedAndSearchedPosts = useMemo(() => {
+    return sortedPosts.filter(post =>
+      post.title.toLowerCase().includes(filter.sort)
+    );
+  }, [filter.sort, sortedPosts]);
 
   const createPost = newPost => {
     setPosts([...posts, newPost]);
@@ -28,14 +45,13 @@ function App() {
     <div className="App">
       <PostForm create={createPost} />
       <hr style={{ margin: '15px 0' }} />
-      <div>
-        <MySelect defaultValue="Sort" options={[]} />
-      </div>
-      {posts.length ? (
-        <PostList remove={removePost} posts={posts} title="Posts about JS" />
-      ) : (
-        <h1 style={{ textAlign: 'center' }}>Posts are not find!</h1>
-      )}
+      <PostFilter filter={filter} setFilter={setFilter} />
+
+      <PostList
+        remove={removePost}
+        posts={sortedAndSearchedPosts}
+        title="Posts about JS"
+      />
     </div>
   );
 }
