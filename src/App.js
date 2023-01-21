@@ -17,7 +17,6 @@ function App() {
   const [filter, setFilter] = useState({ sort: '', query: '' });
 
   const sortedPosts = useMemo(() => {
-    console.log('Logic worked out SortedPosts');
     if (filter.sort) {
       return [...posts].sort((a, b) =>
         a[filter.sort].localeCompare(b[filter.sort])
@@ -28,9 +27,9 @@ function App() {
 
   const sortedAndSearchedPosts = useMemo(() => {
     return sortedPosts.filter(post =>
-      post.title.toLowerCase().includes(filter.sort)
+      post.title.toLowerCase().includes(filter.query.toLowerCase())
     );
-  }, [filter.sort, sortedPosts]);
+  }, [filter.query, sortedPosts]);
 
   const createPost = newPost => {
     setPosts([...posts, newPost]);
